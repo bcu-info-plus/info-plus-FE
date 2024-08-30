@@ -1,14 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { jwtDecode } from 'jwt-decode';
 import { createPost } from '../services/postService';
 import { Post, BoardType, IsDeleted } from '../interfaces/Post';
+
+interface DecodedToken {
+    userId: number;
+    email: string;
+    nickname: string;
+    major: string;
+    // 필요한 경우, 다른 사용자 정보도 추가할 수 있습니다.
+}
 
 const PostForm: React.FC = () => {
     const [title, setTitle] = useState<string>('');
     const [content, setContent] = useState<string>('');
     const [boardType, setBoardType] = useState<BoardType>(BoardType.FreeBoard);
+    const [user, setUser] = useState<DecodedToken | null>(null);
+
+    useEffect(() => {
+        // localStorage에서 JWT 토큰을 가져옵니다.
+        const token = localStorage.getItem('token');
+
+        if (token) {
+            const decoded: DecodedToken = jwtDecode<DecodedToken>(token);
+            setUser(decoded);
+        }
+    }, []);
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
+
+        if (!user) {
+            console.error('User information is not available');
+            return;
+        }
 
         const newPost: Post = {
             postId: 0,
@@ -16,11 +41,11 @@ const PostForm: React.FC = () => {
             content,
             boardType,
             user: {
-                userId: 1, // 임시 사용자 ID (로그인 구현 시 변경 필요)
-                email: 'example@example.com',
-                nickname: 'exampleUser',
-                password: '',
-                major: 'Computer Science',
+                userId: user.userId,
+                email: user.email,
+                nickname: user.nickname,
+                password: '', // JWT 토큰에서는 비밀번호를 제공하지 않습니다.
+                major: user.major,
             },
             localDateTime: new Date().toISOString(),
             isDeleted: IsDeleted.live,
