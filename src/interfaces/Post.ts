@@ -19,5 +19,5 @@ export interface Post {
     content: string;
     localDateTime: string; // ISO 형식의 문자열로 표현
     isDeleted: IsDeleted;
-    images: Image[];
+    images?: Image[] | null; // images 필드를 nullable로 설정
 }

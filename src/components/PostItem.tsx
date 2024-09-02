@@ -16,19 +16,11 @@ const PostItem: React.FC<PostItemProps> = ({ post }) => {
             <p>Date: {new Date(post.localDateTime).toLocaleString()}</p>
             <p>Status: {post.isDeleted === 'deleted' ? 'Deleted' : 'Active'}</p>
             <p>Board Type: {post.boardType === 'QuestionBoard' ? 'Question Board' : 'Free Board'}</p>
-            {post.images.length > 0 && (
-                <div className="images">
-                    <h3>Images:</h3>
-                    <ul>
-                        {post.images.map((image) => (
-                            <li key={image.imageId}>
-                                <img src={image.imageUrl} alt={`Image ${image.imageId}`} />
-                                <p>Board Type: {image.boardType}</p>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            )}
+            <div className="post-images">
+                {post.images?.map((image, index) => (
+                    <img key={index} src={image.imageUrl} alt={`Image ${index + 1}`} />
+                )) || <p>No images available</p>}
+            </div>
         </div>
     );
 };
