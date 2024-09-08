@@ -1,109 +1,15 @@
-/* App.css */
-body {
+/* Global Reset */
+* {
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
   font-family: Arial, sans-serif;
-  background-color: #f5f5f5;
+  background-color: #f9f9f9;
 }
 
 .App {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-.app-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: white;
-  padding: 20px;
-  box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
-}
-
-.logo {
-  font-size: 24px;
-  font-weight: bold;
-  color: green;
-}
-
-.main-nav ul {
-  display: flex;
-  gap: 20px;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.main-nav ul li a {
-  text-decoration: none;
-  color: black;
-  font-size: 18px;
-}
-
-.profile-icon img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-}
-
-.content {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.popular-posts, .latest-posts {
-  background-color: white;
-  padding: 20px;
-  box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.1);
-}
-
-.popular-posts h2, .latest-posts h2 {
-  margin-bottom: 20px;
-}
-
-.post-list {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-.post-card {
-  background-color: #f9f9f9;
-  padding: 15px;
-  border-radius: 5px;
-  flex: 1 1 calc(33.333% - 20px);
-  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
-}
-
-.post-header {
-  display: flex;
-  justify-content: space-between;
-  font-size: 14px;
-  margin-bottom: 10px;
-}
-
-.post-author {
-  font-weight: bold;
-}
-
-.post-category {
-  color: gray;
-}
-
-.post-body p {
-  margin: 0;
-  line-height: 1.5;
-}
-
-.banners {
-  display: flex;
-  gap: 10px;
-}
-
-.banner {
-  width: calc(33.333% - 10px);
-  border-radius: 5px;
-  box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
 }
