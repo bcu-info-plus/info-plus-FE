@@ -14,27 +14,13 @@ import {
     Text,
     Link,
 } from '@chakra-ui/react';
+import MypageSidebar from "./MypageSidebar";
 
 const MyPage: React.FC = () => {
     return (
         <Flex p={6} justify="center" align="start">
             {/* Sidebar */}
-            <Box w="20%" pr={6}>
-                <List spacing={4}>
-                    <ListItem fontWeight="bold" color="green.500">
-                        <Link href="#">내정보</Link>
-                    </ListItem>
-                    <ListItem>
-                        <Link href="#">구매 내역</Link>
-                    </ListItem>
-                    <ListItem>
-                        <Link href="#">찜목록</Link>
-                    </ListItem>
-                    <ListItem>
-                        <Link href="#">문의</Link>
-                    </ListItem>
-                </List>
-            </Box>
+            <MypageSidebar />
 
             {/* Profile Form Section */}
             <Box w="60%">

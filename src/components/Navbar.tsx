@@ -12,9 +12,9 @@ const Navbar: React.FC = () => (
 
             {/* Navigation Links */}
             <HStack spacing={6}>
-                <Link as={RouterLink} to="/questions" fontWeight="medium">질문 게시판</Link>
-                <Link as={RouterLink} to="/free" fontWeight="medium">자유 게시판</Link>
-                <Link as={RouterLink} to="/tips" fontWeight="medium">Tip&해설 공유</Link>
+                <Link as={RouterLink} to="/board/questions" fontWeight="medium">질문 게시판</Link>
+                <Link as={RouterLink} to="/board/free" fontWeight="medium">자유 게시판</Link>
+                <Link as={RouterLink} to="/board/tips" fontWeight="medium">Tip&해설 공유</Link>
                 <Link as={RouterLink} to="/market" fontWeight="medium">장터</Link>
                 <Link as={RouterLink} to="/mypage" fontWeight="medium">마이페이지</Link>
             </HStack>
