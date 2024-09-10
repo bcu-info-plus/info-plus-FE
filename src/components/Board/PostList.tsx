@@ -1,14 +1,18 @@
 import React from 'react';
 import {Box, Flex, Select, Text} from '@chakra-ui/react';
 import { FaHeart, FaCommentDots } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const PostList: React.FC = () => {
     const navigate = useNavigate(); // 페이지 이동을 위한 훅
+    const location = useLocation(); // 현재 경로를 가져오기 위해 useLocation 사용
 
     const handlePostClick = (postId: number) => {
-        // 게시글 클릭 시 해당 postId로 상세 페이지 이동
-        navigate(`/post/${postId}`);
+        // 현재 경로를 바탕으로 해당 postId로 상세 페이지 이동
+        const currentPath = location.pathname; // 현재 경로 가져오기
+        const newPath = `${currentPath}/post/${postId}`.replace(/\/{2,}/g, '/'); // 경로 중복 슬래시 방지
+
+        navigate(newPath); // 지정된 경로로 이동
     };
 
     return (

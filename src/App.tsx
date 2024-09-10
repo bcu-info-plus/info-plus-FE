@@ -16,6 +16,9 @@ import AdvertisementInquiry from "./components/MyPage/AdvertisementInquiry";
 import Write from "./components/Board/Write";
 import PostList from "./components/Board/PostList";
 import PostDetail from "./components/Board/PostDetail";
+import LoginPage from "./components/User/LoginPage";
+import ProtectedRoute from "./components/ProtectedRoute";
+import RegisterPage from "./components/User/RegisterPage";
 
 const App: React.FC = () => (
     <ChakraProvider> {/* Wrap app with ChakraProvider */}
@@ -32,16 +35,56 @@ const App: React.FC = () => (
                 <Route path="/" element={<PostList />} />
 
                 {/* 게시글 상세 페이지 (ID를 경로 파라미터로 받음) */}
-                <Route path="/post/:postId" element={<PostDetail />} />
+                <Route path="/board/:category/post/:postId" element={<PostDetail />} />
 
 
                 <Route path="/market" element={<Market />} />
 
-                <Route path="/mypage" element={<MyPage />} />
-                <Route path="/mypage/purchase" element={<PurchaseItems />} />
-                <Route path="/mypage/wishlist" element={<WishlistPage />} />
-                <Route path="/mypage/inquiry/service" element={<InquiryPage />} />
-                <Route path="/mypage/inquiry/advertisement" element={<AdvertisementInquiry />} />
+
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
+
+                {/* 마이페이지 관련 경로 보호 */}
+                <Route
+                    path="/mypage"
+                    element={
+                        <ProtectedRoute>
+                            <MyPage />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/mypage/purchase"
+                    element={
+                        <ProtectedRoute>
+                            <PurchaseItems />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/mypage/wishlist"
+                    element={
+                        <ProtectedRoute>
+                            <WishlistPage />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/mypage/inquiry/service"
+                    element={
+                        <ProtectedRoute>
+                            <InquiryPage />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/mypage/inquiry/advertisement"
+                    element={
+                        <ProtectedRoute>
+                            <AdvertisementInquiry />
+                        </ProtectedRoute>
+                    }
+                />
             </Routes>
             <Footer />
         </Router>

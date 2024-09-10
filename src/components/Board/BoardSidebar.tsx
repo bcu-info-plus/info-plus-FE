@@ -9,7 +9,11 @@ const Sidebar: React.FC = () => {
     const handlePostButtonClick = () => {
         // 현재 경로를 바탕으로 게시글 작성 경로 설정
         const currentPath = location.pathname;
-        const postWritePath = `${currentPath}/write`; // 현재 경로에 /write 추가
+        const postWritePath = currentPath
+            .replace(/\/\d+$/, '') // 마지막 숫자를 제거한 후 남은 경로
+            .replace(/\/post$/, '') // "/post" 제거
+            .concat('/write')       // 경로에 "/write" 추가
+            .replace(/\/{2,}/g, '/'); // 중복된 슬래시를 하나로 변환
         navigate(postWritePath); // 지정된 경로로 이동
     };
 
