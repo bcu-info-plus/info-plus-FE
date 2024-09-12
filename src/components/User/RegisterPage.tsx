@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Input, Button, Stack, Text, FormControl, FormLabel, FormErrorMessage, useToast } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom'; // 리다이렉트를 위한 useNavigate 가져오기
+import axios from 'axios';
 
 const RegisterPage: React.FC = () => {
     const [email, setEmail] = useState('');
@@ -11,6 +13,7 @@ const RegisterPage: React.FC = () => {
     const [formErrors, setFormErrors] = useState({ email: '', name: '', major: '', password: '', confirmPassword: '' });
     const [passwordsMatch, setPasswordsMatch] = useState(true); // 비밀번호 일치 여부 상태 추가
     const toast = useToast(); // Chakra UI의 toast를 사용하여 알림 메시지를 표시
+    const navigate = useNavigate(); // 리다이렉트용 훅
 
     // useEffect로 비밀번호가 일치하는지 실시간 검증
     useEffect(() => {
@@ -19,7 +22,7 @@ const RegisterPage: React.FC = () => {
         }
     }, [password, confirmPassword]); // 비밀번호나 확인 비밀번호가 변경될 때마다 실행
 
-    const handleRegister = () => {
+    const handleRegister = async () => {
         const errors = { email: '', name: '', major: '', password: '', confirmPassword: '' };
 
         // 유효성 검사
@@ -31,17 +34,67 @@ const RegisterPage: React.FC = () => {
 
         // 에러가 없으면 회원가입 처리
         if (Object.values(errors).every(error => error === '')) {
-            // 여기서 실제 회원가입 처리를 합니다.
-            // 예를 들어 API 요청을 보내거나, 데이터를 로컬에 저장하는 등
+            try {
+                const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/register`, {
+                    email,
+                    name,
+                    major,
+                    password
+                });
 
-            // 회원가입 성공 시 toast로 알림
-            toast({
-                title: '회원가입 성공',
-                description: '회원가입이 완료되었습니다. 로그인 해주세요.',
-                status: 'success',
-                duration: 3000,
-                isClosable: true,
-            });
+                if (response.status === 201) {
+                    // 회원가입 성공 시 toast로 알림
+                    toast({
+                        title: '회원가입 성공',
+                        description: '회원가입이 완료되었습니다. 로그인 해주세요.',
+                        status: 'success',
+                        duration: 3000,
+                        isClosable: true,
+                    });
+
+                    // 로그인 페이지로 이동
+                    navigate('/login');
+                }
+            } catch (error: any) {
+                if (error.response && error.response.status === 400) {
+                    // 중복 이메일 또는 이름에 대한 메시지 처리
+                    const errorMessage = error.response.data; // 서버에서 오는 에러 메시지 (서버가 반환하는 데이터 구조에 따라 수정 필요)
+                    if (errorMessage.includes('email')) {
+                        toast({
+                            title: '회원가입 실패',
+                            description: '이메일이 중복되었습니다.',
+                            status: 'error',
+                            duration: 3000,
+                            isClosable: true,
+                        });
+                    } else if (errorMessage.includes('name')) {
+                        toast({
+                            title: '회원가입 실패',
+                            description: '이름이 중복되었습니다.',
+                            status: 'error',
+                            duration: 3000,
+                            isClosable: true,
+                        });
+                    } else {
+                        toast({
+                            title: '회원가입 실패',
+                            description: '회원가입 중 오류가 발생했습니다. 다시 시도해주세요.',
+                            status: 'error',
+                            duration: 3000,
+                            isClosable: true,
+                        });
+                    }
+                } else {
+                    console.error(error);
+                    toast({
+                        title: '회원가입 실패',
+                        description: '회원가입 중 오류가 발생했습니다. 다시 시도해주세요.',
+                        status: 'error',
+                        duration: 3000,
+                        isClosable: true,
+                    });
+                }
+            }
         } else {
             // 에러가 있으면 에러 메시지 상태로 업데이트
             setFormErrors(errors);

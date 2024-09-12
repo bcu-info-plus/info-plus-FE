@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, Heading, Stack, Text, Link, Flex } from '@chakra-ui/react';
+import { Link as RouterLink } from 'react-router-dom';
 
 const PostsSection: React.FC = () => (
     <Box p={6}>
@@ -8,7 +9,7 @@ const PostsSection: React.FC = () => (
             <Box w={{ base: 'full', md: '30%' }} borderWidth="1px" borderRadius="md" boxShadow="md" p={4}>
                 <Flex justify="space-between" alignItems="center" mb={4}>
                     <Heading size="md" borderBottom="2px solid green">질문 게시판</Heading>
-                    <Link fontSize="sm" color="gray.500" href="#">
+                    <Link as={RouterLink} to="/board/questions" fontSize="sm" color="gray.500">
                         + 더보기
                     </Link>
                 </Flex>
@@ -26,7 +27,7 @@ const PostsSection: React.FC = () => (
             <Box w={{ base: 'full', md: '30%' }} borderWidth="1px" borderRadius="md" boxShadow="md" p={4}>
                 <Flex justify="space-between" alignItems="center" mb={4}>
                     <Heading size="md" borderBottom="2px solid green">자유 게시판</Heading>
-                    <Link fontSize="sm" color="gray.500" href="#">
+                    <Link as={RouterLink} to="/board/free" fontSize="sm" color="gray.500">
                         + 더보기
                     </Link>
                 </Flex>
@@ -44,7 +45,7 @@ const PostsSection: React.FC = () => (
             <Box w={{ base: 'full', md: '30%' }} borderWidth="1px" borderRadius="md" boxShadow="md" p={4}>
                 <Flex justify="space-between" alignItems="center" mb={4}>
                     <Heading size="md" borderBottom="2px solid green">Tip&해설 공유</Heading>
-                    <Link fontSize="sm" color="gray.500" href="#">
+                    <Link as={RouterLink} to="/board/tips" fontSize="sm" color="gray.500">
                         + 더보기
                     </Link>
                 </Flex>

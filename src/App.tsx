@@ -19,73 +19,43 @@ import PostDetail from "./components/Board/PostDetail";
 import LoginPage from "./components/User/LoginPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import RegisterPage from "./components/User/RegisterPage";
+import SilentRefresh from "./components/SilentRefresh";
 
 const App: React.FC = () => (
     <ChakraProvider> {/* Wrap app with ChakraProvider */}
         <Router>
+            {/* SilentRefresh가 라우팅 변경 시마다 실행되도록 추가 */}
+            <SilentRefresh />
+
             <Navbar />
             <Routes>
                 <Route path="/" element={<Home />} />
 
+                {/* 구체적인 경로를 먼저 선언 */}
                 <Route path="/board/questions" element={<Questions />} />
                 <Route path="/board/free" element={<Free />} />
                 <Route path="/board/tips" element={<Tips />} />
-                <Route path="/board/:category/write" element={<Write />} />
-                {/* 게시글 목록 */}
-                <Route path="/" element={<PostList />} />
 
-                {/* 게시글 상세 페이지 (ID를 경로 파라미터로 받음) */}
+                {/* 동적 경로는 나중에 선언 */}
+                <Route path="/board/:category/write" element={<Write />} />
+                <Route path="/board/:category" element={<PostList category=":category"/>} />
+
+                {/* 나머지 경로들 */}
                 <Route path="/board/:category/post/:postId" element={<PostDetail />} />
 
-
                 <Route path="/market" element={<Market />} />
-
-
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
 
                 {/* 마이페이지 관련 경로 보호 */}
-                <Route
-                    path="/mypage"
-                    element={
-                        <ProtectedRoute>
-                            <MyPage />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="/mypage/purchase"
-                    element={
-                        <ProtectedRoute>
-                            <PurchaseItems />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="/mypage/wishlist"
-                    element={
-                        <ProtectedRoute>
-                            <WishlistPage />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="/mypage/inquiry/service"
-                    element={
-                        <ProtectedRoute>
-                            <InquiryPage />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="/mypage/inquiry/advertisement"
-                    element={
-                        <ProtectedRoute>
-                            <AdvertisementInquiry />
-                        </ProtectedRoute>
-                    }
-                />
+                <Route path="/mypage" element={<ProtectedRoute><MyPage /></ProtectedRoute>} />
+                <Route path="/mypage/purchase" element={<ProtectedRoute><PurchaseItems /></ProtectedRoute>} />
+                <Route path="/mypage/wishlist" element={<ProtectedRoute><WishlistPage /></ProtectedRoute>} />
+                <Route path="/mypage/inquiry/service" element={<ProtectedRoute><InquiryPage /></ProtectedRoute>} />
+                <Route path="/mypage/inquiry/advertisement" element={<ProtectedRoute><AdvertisementInquiry /></ProtectedRoute>} />
+
             </Routes>
+
             <Footer />
         </Router>
     </ChakraProvider>

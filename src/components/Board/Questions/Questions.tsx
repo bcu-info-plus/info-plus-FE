@@ -15,7 +15,7 @@ const Free: React.FC = () => {
                 <Box w="75%">
                     {/* Posts List and Pagination should be in a vertical layout */}
                     <Box>
-                        <PostList />
+                        <PostList category="questions" />
                         <Pagination />
                     </Box>
                 </Box>
