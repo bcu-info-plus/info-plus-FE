@@ -64,11 +64,23 @@ const MyPage: React.FC = () => {
 
                 } catch (refreshError) {
                     console.error('Failed to refresh access token:', refreshError);
+
                     // Refresh Token도 실패한 경우, 로그인 페이지로 리다이렉트 또는 로그아웃 처리
+
+                    // 토큰 삭제
+                    localStorage.removeItem('accessToken');
+                    localStorage.removeItem('refreshToken');
+
                     window.location.href = '/login';
                 }
             } else {
+                // 토큰 삭제
+                localStorage.removeItem('accessToken');
+                localStorage.removeItem('refreshToken');
+
                 console.error('Failed to fetch user data:', error);
+
+                window.location.href = '/login';
             }
         }
     };

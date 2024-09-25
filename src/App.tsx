@@ -15,7 +15,7 @@ import InquiryPage from "./components/MyPage/InquiryPage";
 import AdvertisementInquiry from "./components/MyPage/AdvertisementInquiry";
 import Write from "./components/Board/Write";
 import PostList from "./components/Board/PostList";
-import PostDetail from "./components/Board/PostDetail";
+import PostDetail from "./components/Board/PostDetail/PostDetail";
 import LoginPage from "./components/User/LoginPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import RegisterPage from "./components/User/RegisterPage";

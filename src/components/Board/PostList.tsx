@@ -1,84 +1,91 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Flex, Select, Text, Spinner } from '@chakra-ui/react';
+import { Box, Flex, Select, Text, Spinner, useToast } from '@chakra-ui/react';
 import { FaHeart, FaCommentDots } from 'react-icons/fa';
-import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
 interface Post {
     postId: number;
     title: string;
-    department: string;
+    user: {
+        userId: number;
+        name: string; // 작성자 이름
+        major: string; // 작성자 학과
+    };
     localDateTime: string;
-    commentsCount: number;
     likesCount: number;
 }
-const PostList: React.FC<{ category: string }> = ({ category }) => {
-    useEffect(() => {
-        console.log('Category from props:', category); // props로 받은 category 값 확인
-    }, [category]);
 
+const PostList: React.FC<{ category: string }> = ({ category }) => {
     const navigate = useNavigate();
     const location = useLocation();
-
+    const toast = useToast();
     const [posts, setPosts] = useState<Post[]>([]); // 게시글 목록을 저장할 상태
     const [loading, setLoading] = useState(true); // 로딩 상태 관리
     const [error, setError] = useState<string | null>(null); // 에러 메시지 상태 관리
+    const [commentCounts, setCommentCounts] = useState<{ [postId: number]: number }>({}); // 각 게시글의 댓글 수 상태
 
+    // API에서 게시글 목록을 가져오는 함수
     useEffect(() => {
         const fetchPosts = async () => {
-            console.log('Fetching posts...'); // 디버깅 로그
-
             try {
                 if (!process.env.REACT_APP_API_URL) {
                     throw new Error("API URL is missing from environment variables!");
                 }
 
-                console.log('Category:', category); // 현재 카테고리 로그
                 const response = await axios.get(`${process.env.REACT_APP_API_URL}/posts`, {
-                    params: { boardType: category } // API 요청 시 boardType을 쿼리 파라미터로 보냄
+                    params: { boardType: category } // boardType을 쿼리 파라미터로 보냄
                 });
 
-                console.log('API Response:', response.data); // API 응답 로그
-
-                if (response.data.length === 0) {
-                    // 게시글이 없으면 "내용 없음" 상태 설정
-                    setError('게시글이 없습니다.');
-                    console.log('No posts available.'); // 디버깅 로그
-                } else {
-                    // 게시글이 있으면 데이터 설정
-                    setPosts(response.data);
-                    setError(null); // 에러 상태 초기화
-                }
+                setPosts(response.data);
+                setError(null);
+                // 게시글 목록이 있으면 각각의 댓글 수를 불러옴
+                response.data.forEach((post: Post) => {
+                    fetchCommentCount(post.postId); // 각 게시글의 댓글 수를 가져옴
+                });
             } catch (error: any) {
                 console.error('Error fetching posts:', error.message || error);
                 setError('게시글을 불러오는 중 오류가 발생했습니다.');
             } finally {
-                console.log('Setting loading to false');
-                setLoading(false); // 로딩 상태 종료
+                setLoading(false);
             }
         };
 
         if (category) {
-            console.log('Category changed, fetching new posts...'); // 카테고리 변경 시 로그
-            fetchPosts(); // 카테고리가 변경될 때마다 게시글을 다시 불러옴
+            fetchPosts();
         }
-    }, [category]); // category가 변경될 때마다 useEffect 실행
+    }, [category]);
+
+    // 댓글 수를 불러오는 함수 (각 게시글에 대해 호출)
+    const fetchCommentCount = async (postId: number) => {
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/comments/post/${postId}/count`);
+            setCommentCounts((prevCounts) => ({
+                ...prevCounts,
+                [postId]: response.data, // postId에 해당하는 댓글 수를 저장
+            }));
+        } catch (err) {
+            toast({
+                title: "댓글 수를 불러오는 데 실패했습니다.",
+                status: "error",
+                duration: 5000,
+                isClosable: true,
+            });
+        }
+    };
 
     const handlePostClick = (postId: number) => {
         const currentPath = location.pathname;
         const newPath = `${currentPath}/post/${postId}`.replace(/\/{2,}/g, '/'); // 중복된 슬래시 방지
-        console.log('Navigating to:', newPath); // 경로 이동 로그
         navigate(newPath); // postId를 포함한 경로로 이동
     };
 
     if (loading) {
-        console.log('Loading is true, displaying spinner...'); // 로딩 상태 로그
-        return <Spinner size="xl" />; // 로딩 중일 때 스피너 표시
+        return <Spinner size="xl" />;
     }
 
     if (error) {
-        console.log('Error occurred:', error); // 에러 상태 로그
-        return <Text color="red.500" textAlign="center">{error}</Text>; // 에러 또는 "내용 없음" 메시지 출력
+        return <Text color="red.500" textAlign="center">{error}</Text>;
     }
 
     return (
@@ -102,15 +109,17 @@ const PostList: React.FC<{ category: string }> = ({ category }) => {
                         alignItems="center"
                         cursor="pointer"
                         _hover={{ bg: 'gray.100' }}
-                        onClick={() => handlePostClick(post.postId)} // 게시글 클릭 시 이동
+                        onClick={() => handlePostClick(post.postId)}
                     >
                         <Box flex="1">
-                            <Text fontSize="md" fontWeight="bold" isTruncated>
-                                {post.title}
-                            </Text>
-                            <Text fontSize="xs" color="gray.500">
-                                {post.department}
-                            </Text>
+                            <Text fontSize="md" fontWeight="bold" isTruncated>{post.title}</Text>
+
+                            {/* name과 major를 한 줄로 배치 */}
+                            <Flex fontSize="xs" color="gray.500">
+                                <Text>{post.user.name}</Text>
+                                <Text mx={2}>|</Text> {/* 이름과 학과 사이에 구분자 또는 여백을 추가 */}
+                                <Text>{post.user.major}</Text>
+                            </Flex>
                         </Box>
 
                         <Box w="120px" textAlign="right">
@@ -119,7 +128,7 @@ const PostList: React.FC<{ category: string }> = ({ category }) => {
                             </Text>
                             <Flex justify="flex-end" align="center" mt={2}>
                                 <Text fontSize="xs" mr={2}>
-                                    {post.commentsCount}
+                                    {commentCounts[post.postId] ?? 0} {/* 댓글 수 표시 */}
                                 </Text>
                                 <FaCommentDots color="gray.500" />
                                 <Text fontSize="xs" mx={2}>
