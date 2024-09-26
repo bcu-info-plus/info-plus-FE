@@ -8,7 +8,7 @@ interface User {
 }
 
 interface Post {
-    id: number;
+    postId: number;
     title: string;
     user: User;   // user는 객체로 정의
     major: string;
@@ -56,7 +56,7 @@ const LatestPosts: React.FC = () => {
                         .slice(0, 4) // 그 중 상위 4개의 게시글만 선택
                         .map((post) => ( // 최신 4개의 게시글만 표시
                             <PostCard
-                                key={post.id}
+                                id={post.postId}
                                 title={post.title}
                                 user={post.user.name}
                                 major={post.major}

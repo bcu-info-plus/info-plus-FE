@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Heading, Stack, Text, Link, Flex } from '@chakra-ui/react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const PostsSection: React.FC = () => {
     const [questionPosts, setQuestionPosts] = useState([]);
     const [freePosts, setFreePosts] = useState([]);
     const [tipsPosts, setTipsPosts] = useState([]);
+    const navigate = useNavigate();  // useNavigate 훅 사용
+
+    // 클릭 시 게시글로 이동하는 함수
+    const handleClick = (boardType: string, id: number) => {
+        navigate(`/board/${boardType.toLowerCase()}/post/${id}`);
+    };
 
     useEffect(() => {
         // 질문 게시판의 게시글 불러오기
@@ -58,7 +64,11 @@ const PostsSection: React.FC = () => {
                                 .reverse() // 배열을 역순으로 정렬 (최신 게시글이 앞으로)
                                 .slice(0, 5) // 그 중에서 상위 5개만 선택
                                 .map((post: any, index: number) => (
-                                    <Text key={index} color="gray.500">
+                                    <Text key={index}
+                                          onClick={() => handleClick(post.boardType, post.postId)}  // 클릭 시 함수 호출
+                                          cursor="pointer"
+                                          _hover={{ color: 'blue.500' }}
+                                          color="gray.500">
                                         {post.title}
                                     </Text>
                                 ))
@@ -84,7 +94,11 @@ const PostsSection: React.FC = () => {
                                 .reverse() // 배열을 역순으로 정렬 (최신 게시글이 앞으로)
                                 .slice(0, 5) // 그 중에서 상위 5개만 선택
                                 .map((post: any, index: number) => (
-                                    <Text key={index} color="gray.500">
+                                    <Text key={index}
+                                          onClick={() => handleClick(post.boardType, post.postId)}  // 클릭 시 함수 호출
+                                          cursor="pointer"
+                                          _hover={{ color: 'blue.500' }}
+                                          color="gray.500">
                                         {post.title}
                                     </Text>
                                 ))
@@ -110,7 +124,11 @@ const PostsSection: React.FC = () => {
                                 .reverse() // 배열을 역순으로 정렬 (최신 게시글이 앞으로)
                                 .slice(0, 5) // 그 중에서 상위 5개만 선택
                                 .map((post: any, index: number) => (
-                                    <Text key={index} color="gray.500">
+                                    <Text key={index}
+                                          onClick={() => handleClick(post.boardType, post.postId)}  // 클릭 시 함수 호출
+                                          cursor="pointer"
+                                          _hover={{ color: 'blue.500' }}
+                                          color="gray.500">
                                         {post.title}
                                     </Text>
                                 ))

@@ -8,12 +8,13 @@ interface User {
 }
 
 interface Post {
-    id: number;
+    postId: number;
     title: string;
     user: User;   // user는 객체로 정의
     major: string;
     boardType: string;
     content: string;
+    likesCount: number
 }
 
 const LatestPosts: React.FC = () => {
@@ -52,11 +53,12 @@ const LatestPosts: React.FC = () => {
                 ) : (
                     posts
                         .slice() // 원본 배열을 복사하여 변형
-                        .reverse() // 최신 게시물이 앞에 오도록 배열을 역순으로 정렬
+                        .sort((a, b) => b.likesCount - a.likesCount) // likesCount 기준으로 내림차순 정렬
                         .slice(0, 4) // 그 중 상위 4개의 게시글만 선택
-                        .map((post) => ( // 최신 4개의 게시글만 표시
+                        .map((post) => ( // 상위 4개의 게시글만 표시
                             <PostCard
-                                key={post.id}
+                                key={post.postId} // key 추가
+                                id={post.postId}
                                 title={post.title}
                                 user={post.user.name}
                                 major={post.major}

@@ -101,44 +101,47 @@ const PostList: React.FC<{ category: string }> = ({ category }) => {
             </Flex>
 
             <Box borderWidth="1px" borderRadius="md" borderColor="green.500">
-                {posts.map((post) => (
-                    <Flex
-                        key={post.postId}
-                        borderBottom="1px solid gray"
-                        p={4}
-                        alignItems="center"
-                        cursor="pointer"
-                        _hover={{ bg: 'gray.100' }}
-                        onClick={() => handlePostClick(post.postId)}
-                    >
-                        <Box flex="1">
-                            <Text fontSize="md" fontWeight="bold" isTruncated>{post.title}</Text>
+                {posts
+                    .slice() // 원본 배열을 복사
+                    .sort((a, b) => new Date(b.localDateTime).getTime() - new Date(a.localDateTime).getTime()) // 날짜 기준으로 내림차순 정렬
+                    .map((post) => (
+                        <Flex
+                            key={post.postId}
+                            borderBottom="1px solid gray"
+                            p={4}
+                            alignItems="center"
+                            cursor="pointer"
+                            _hover={{ bg: 'gray.100' }}
+                            onClick={() => handlePostClick(post.postId)}
+                        >
+                            <Box flex="1">
+                                <Text fontSize="md" fontWeight="bold" isTruncated>{post.title}</Text>
 
-                            {/* name과 major를 한 줄로 배치 */}
-                            <Flex fontSize="xs" color="gray.500">
-                                <Text>{post.user.name}</Text>
-                                <Text mx={2}>|</Text> {/* 이름과 학과 사이에 구분자 또는 여백을 추가 */}
-                                <Text>{post.user.major}</Text>
-                            </Flex>
-                        </Box>
+                                {/* name과 major를 한 줄로 배치 */}
+                                <Flex fontSize="xs" color="gray.500">
+                                    <Text>{post.user.name}</Text>
+                                    <Text mx={2}>|</Text> {/* 이름과 학과 사이에 구분자 또는 여백을 추가 */}
+                                    <Text>{post.user.major}</Text>
+                                </Flex>
+                            </Box>
 
-                        <Box w="120px" textAlign="right">
-                            <Text fontSize="xs" color="gray.500">
-                                {new Date(post.localDateTime).toLocaleDateString()}
-                            </Text>
-                            <Flex justify="flex-end" align="center" mt={2}>
-                                <Text fontSize="xs" mr={2}>
-                                    {commentCounts[post.postId] ?? 0} {/* 댓글 수 표시 */}
+                            <Box w="120px" textAlign="right">
+                                <Text fontSize="xs" color="gray.500">
+                                    {new Date(post.localDateTime).toLocaleDateString()}
                                 </Text>
-                                <FaCommentDots color="gray.500" />
-                                <Text fontSize="xs" mx={2}>
-                                    {post.likesCount}
-                                </Text>
-                                <FaHeart color="gray.500" />
-                            </Flex>
-                        </Box>
-                    </Flex>
-                ))}
+                                <Flex justify="flex-end" align="center" mt={2}>
+                                    <Text fontSize="xs" mr={2}>
+                                        {commentCounts[post.postId] ?? 0} {/* 댓글 수 표시 */}
+                                    </Text>
+                                    <FaCommentDots color="gray.500" />
+                                    <Text fontSize="xs" mx={2}>
+                                        {post.likesCount}
+                                    </Text>
+                                    <FaHeart color="gray.500" />
+                                </Flex>
+                            </Box>
+                        </Flex>
+                    ))}
             </Box>
         </Box>
     );

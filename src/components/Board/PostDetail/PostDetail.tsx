@@ -26,7 +26,6 @@ const PostDetail: React.FC = () => {
         userId: string;  // JWT 토큰에서 가져올 사용자 ID
     }
 
-
     // JWT 디코드하여 사용자 ID 가져오기
     const getUserIdFromToken = (token: string | null) => {
         if (!token) return null;
@@ -101,6 +100,12 @@ const PostDetail: React.FC = () => {
                 isClosable: true,
             });
         }
+    };
+
+
+// 수정 버튼 클릭 시 수정 페이지로 이동하는 함수
+    const handleEdit = () => {
+        navigate(`${location.pathname}/edit`);  // 현재 경로에 /edit 추가하여 수정 페이지로 이동
     };
 
     // 좋아요 수 조회하기
@@ -253,7 +258,7 @@ const PostDetail: React.FC = () => {
                         </Flex>
                         {isOwner && (
                             <Flex>
-                                <Button colorScheme="blue" size="sm" mr={2}>
+                                <Button colorScheme="blue" size="sm" mr={2} onClick={handleEdit}>
                                     수정
                                 </Button>
                                 <Button colorScheme="red" size="sm" onClick={handleDelete}>

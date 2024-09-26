@@ -20,6 +20,7 @@ import LoginPage from "./components/User/LoginPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import RegisterPage from "./components/User/RegisterPage";
 import SilentRefresh from "./components/SilentRefresh";
+import EditPost from "./components/Board/EditPost";
 
 const App: React.FC = () => (
     <ChakraProvider> {/* Wrap app with ChakraProvider */}
@@ -39,6 +40,7 @@ const App: React.FC = () => (
                 {/* 동적 경로는 나중에 선언 */}
                 <Route path="/board/:category/write" element={<Write />} />
                 <Route path="/board/:category" element={<PostList category=":category"/>} />
+                <Route path="/board/:category/post/:id/edit" element={<EditPost />} />
 
                 {/* 나머지 경로들 */}
                 <Route path="/board/:category/post/:postId" element={<PostDetail />} />
