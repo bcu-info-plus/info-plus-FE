@@ -239,11 +239,30 @@ const PostDetail: React.FC = () => {
                         {postData.title}
                     </Text>
 
-                    <Image
-                        src={postData.images.length > 0 ? postData.images[0].imageUrl : 'https://via.placeholder.com/600x400'}
-                        alt="Post Image"
-                        mb={4}
-                    />
+                    {postData.images && postData.images.length > 0 ? (
+                        <Flex direction="column" wrap="nowrap">  {/* 방향을 수직(column)으로 설정 */}
+                            {postData.images
+                                .sort((a: any, b: any) => a.imageId - b.imageId)  // imageId로 정렬
+                                .map((image: any, index: number) => (
+                                    <Image
+                                        key={image.imageId}  // 고유한 imageId를 key로 사용
+                                        src={`${process.env.REACT_APP_API_URL}${image.imageUrl}`}
+                                        alt={`Post Image ${index}`}
+                                        mb={4}  // 각 이미지 간의 간격 추가
+                                        objectFit="cover"
+                                        m={2}  // 이미지 사이에 마진 추가
+                                    />
+                                ))
+                            }
+                        </Flex>
+                    ) : (
+                        <Image
+                            src="https://via.placeholder.com/600x400"
+                            alt="Placeholder Image"
+                            mb={4}
+                        />
+                    )}
+
 
                     <Text>{postData.content}</Text>
 

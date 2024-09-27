@@ -11,6 +11,7 @@ import {
     Stack,
 } from '@chakra-ui/react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; // useNavigate import
 import MypageSidebar from './MypageSidebar';
 
 const MyPage: React.FC = () => {
@@ -24,6 +25,9 @@ const MyPage: React.FC = () => {
     // Access Token과 Refresh Token 가져오기
     const accessToken = localStorage.getItem('accessToken');
     const refreshToken = localStorage.getItem('refreshToken');
+
+    // useNavigate 훅 초기화
+    const navigate = useNavigate();
 
     // 유저 데이터를 가져오는 함수
     const fetchUserData = async (token: string, refreshToken: string) => {
@@ -71,7 +75,8 @@ const MyPage: React.FC = () => {
                     localStorage.removeItem('accessToken');
                     localStorage.removeItem('refreshToken');
 
-                    window.location.href = '/login';
+                    // useNavigate로 로그인 페이지로 리다이렉트
+                    navigate('/login');
                 }
             } else {
                 // 토큰 삭제
@@ -80,7 +85,8 @@ const MyPage: React.FC = () => {
 
                 console.error('Failed to fetch user data:', error);
 
-                window.location.href = '/login';
+                // useNavigate로 로그인 페이지로 리다이렉트
+                navigate('/login');
             }
         }
     };
@@ -91,14 +97,22 @@ const MyPage: React.FC = () => {
             fetchUserData(accessToken, refreshToken);
         } else {
             // Access Token이나 Refresh Token이 없으면 로그인 페이지로 리다이렉트
-            window.location.href = '/login';
+            navigate('/login');
         }
-    }, [accessToken, refreshToken]);
+    }, [accessToken, refreshToken, navigate]);
 
     const handleUpdate = () => {
         // 수정 요청을 보내는 로직 추가
         console.log('프로필 수정 요청');
-        // 실제 수정 로직은 axios.put 등을 사용하여 구현 가능
+        // 실제 수정 로직은 axios.put 등을 사용하여 구현
+    };
+
+    const handleLogout = () => {
+        // 로그아웃 시 토큰 삭제 및 리다이렉트 처리
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        // useNavigate로 로그인 페이지로 리다이렉트
+        navigate('/login');
     };
 
     return (
@@ -131,9 +145,15 @@ const MyPage: React.FC = () => {
                         <Input type="password" placeholder="*********" />
                     </FormControl>
 
-                    <Button colorScheme="green" w="100px" alignSelf="flex-end" onClick={handleUpdate}>
-                        수정
-                    </Button>
+                    {/* 수정 및 로그아웃 버튼 */}
+                    <Flex justify="flex-end">
+                        <Button colorScheme="green" w="100px" onClick={handleUpdate}>
+                            수정
+                        </Button>
+                        <Button colorScheme="red" w="100px" onClick={handleLogout} ml={4}>
+                            로그아웃
+                        </Button>
+                    </Flex>
                 </Stack>
             </Box>
         </Flex>
